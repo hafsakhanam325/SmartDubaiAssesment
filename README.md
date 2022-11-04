@@ -10,9 +10,9 @@ Assumptions and understandings made while developing API's:
 
 Design developed as follows :
 
-Using H2 in memory database to store the data of books
-Using java 8 Streams API to filter and collect the data
-Using Swagger configurations for API documentation and test purpose
+- Using H2 in memory database to store the data of books
+- Using java 8 Streams API to filter and collect the data
+- Using Swagger configurations for API documentation and test purpose
 
 
 
