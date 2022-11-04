@@ -96,4 +96,10 @@ public class BookService {
         }
         return afterDiscountFictionBooksPrice+afterDiscountComicsBooksPrice;
     }
+    
+    public void deleteBookById(Long bookId) {
+        log.info("BookService.findAll starts here:");
+        Book book = bookRepository.findByBookId(bookId);
+        bookRepository.delete(book);
+    }
 }
