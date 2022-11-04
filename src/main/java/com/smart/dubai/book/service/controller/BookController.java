@@ -33,6 +33,20 @@ public class BookController {
         return ResponseEntity.ok()
                 .body(isbookSaved !=null ? "Book has been saved" : "Bad request");
     }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteBookById(@PathVariable("id") Long bookId){
+        log.info("BookController.deleteBookById starts here:");
+        Boolean idCheck = false;
+        Gson gson = new Gson();
+        if(null != bookId && 0 != bookId){
+          service.deleteBookById(bookId);
+        }else{
+            idCheck = true;
+        }
+        return ResponseEntity.ok()
+                .body(idCheck !=null ? "Book has been deleted, Book id:"+ bookId : "Bad request");
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<String> findBookById(@PathVariable("id") Long bookId){
@@ -68,11 +82,12 @@ public class BookController {
     @PostMapping("/checkout")
     public ResponseEntity<String> checkoutBooks(@RequestBody CheckoutBean checkoutBean){
         log.info("BookController.checkoutBooks starts here:");
+        Boolean promoCheck = promoCheck(checkoutBean);
         Double price = null;
         if(null != checkoutBean && checkoutBean.getBooks().size() > 0);
             price = service.checkoutBooks(checkoutBean);
         return ResponseEntity.ok()
-                .body(price !=null ? "Total Price after discount : "+ price : "Bad request");
+                .body(price !=null ? ( promoCheck ? "Total Price : "+ price : "Total Price after discount : "+ price ) : "Bad request");
     }
 
     private boolean BookTypeValidation(String type){
@@ -82,5 +97,13 @@ public class BookController {
         }catch (Exception e){
             return true;
         }
+    }
+    
+    private boolean promoCheck(CheckoutBean checkoutBean){
+        Boolean isNull = true;
+        if(null != checkoutBean && null != checkoutBean.getPromotionCode() &&
+                !checkoutBean.getPromotionCode().trim().isEmpty())
+            return false;
+        return true;
     }
 }
